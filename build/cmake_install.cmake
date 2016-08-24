@@ -121,6 +121,8 @@ IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   INCLUDE("/home/wasp/catkin_ws/build/apriltags/cmake_install.cmake")
   INCLUDE("/home/wasp/catkin_ws/build/wasp_custom_msgs/cmake_install.cmake")
   INCLUDE("/home/wasp/catkin_ws/build/task2_tb_slam/cmake_install.cmake")
+  INCLUDE("/home/wasp/catkin_ws/build/task3_opencv/cmake_install.cmake")
+  INCLUDE("/home/wasp/catkin_ws/build/task3_pcl/cmake_install.cmake")
   INCLUDE("/home/wasp/catkin_ws/build/tum_ardrone/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)

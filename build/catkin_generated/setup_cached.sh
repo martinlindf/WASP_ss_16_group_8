@@ -7,7 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CPATH="/home/wasp/catkin_ws/devel/include:$CPATH"
 export PWD="/home/wasp/catkin_ws/build"
-export PYTHONPATH="/home/wasp/catkin_ws/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROS_PACKAGE_PATH="/home/wasp/catkin_ws/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks"

@@ -880,7 +880,8 @@ actionlib_msgs_DIR:PATH=/opt/ros/indigo/share/actionlib_msgs/cmake
 //Value Computed by CMake
 apriltags_BINARY_DIR:STATIC=/home/wasp/catkin_ws/build/apriltags
 
-apriltags_DIR:PATH=
+//The directory containing a CMake configuration file for apriltags.
+apriltags_DIR:PATH=/home/wasp/catkin_ws/devel/share/apriltags/cmake
 
 //Dependencies for the target
 apriltags_LIB_DEPENDS:STATIC=general;opencv_videostab;general;opencv_video;general;opencv_superres;general;opencv_stitching;general;opencv_photo;general;opencv_ocl;general;opencv_objdetect;general;opencv_ml;general;opencv_legacy;general;opencv_imgproc;general;opencv_highgui;general;opencv_gpu;general;opencv_flann;general;opencv_features2d;general;opencv_core;general;opencv_contrib;general;opencv_calib3d;
@@ -1093,7 +1094,8 @@ visualization_msgs_DIR:PATH=/opt/ros/indigo/share/visualization_msgs/cmake
 //Value Computed by CMake
 wasp_custom_msgs_BINARY_DIR:STATIC=/home/wasp/catkin_ws/build/wasp_custom_msgs
 
-wasp_custom_msgs_DIR:PATH=
+//The directory containing a CMake configuration file for wasp_custom_msgs.
+wasp_custom_msgs_DIR:PATH=/home/wasp/catkin_ws/devel/share/wasp_custom_msgs/cmake
 
 //Value Computed by CMake
 wasp_custom_msgs_SOURCE_DIR:STATIC=/home/wasp/catkin_ws/src/wasp_custom_msgs
@@ -1203,7 +1205,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=7
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=9
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

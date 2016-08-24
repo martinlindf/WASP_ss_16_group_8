@@ -6,6 +6,24 @@
 
 #IncludeRegexTransform: 
 
+/home/wasp/catkin_ws/devel/include/wasp_custom_msgs/object_loc.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+geometry_msgs/Point.h
+-
+
 /home/wasp/catkin_ws/src/task3_pcl/src/PCL_object_clustering.cpp
 headers/PCL_object_clustering.h
 /home/wasp/catkin_ws/src/task3_pcl/src/headers/PCL_object_clustering.h
@@ -52,6 +70,22 @@ string
 vector
 -
 time.h
+-
+
+/opt/ros/indigo/include/geometry_msgs/Point.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
 -
 
 /opt/ros/indigo/include/pcl_conversions/pcl_conversions.h

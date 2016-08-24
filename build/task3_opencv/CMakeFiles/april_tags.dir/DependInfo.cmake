@@ -23,6 +23,7 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
   "/home/wasp/catkin_ws/src/task3_opencv/include"
+  "/home/wasp/catkin_ws/devel/include"
   "/home/wasp/catkin_ws/src/apriltags/include"
   "/opt/ros/indigo/include"
   "/usr/include/eigen3"

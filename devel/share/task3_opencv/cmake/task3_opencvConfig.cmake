@@ -153,7 +153,7 @@ foreach(t ${task3_opencv_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "image_transport;roscpp;sensor_msgs;geometry_msgs;tf;cv_bridge;message_runtime;std_msgs;nodelet;apriltags")
+set(depends "image_transport;roscpp;sensor_msgs;geometry_msgs;tf;cv_bridge;message_runtime;std_msgs;nodelet;apriltags;wasp_custom_msgs")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls
