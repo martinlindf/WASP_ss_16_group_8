@@ -143,7 +143,7 @@ public:
     m_gain(-1),
     m_brightness(-1),
 
-    m_deviceId(0)
+    m_deviceId(1)
   {}
 
   // changing the tag family
@@ -209,9 +209,9 @@ public:
     tf::Vector3 point(translation(1), translation(2), translation(3)); 
 
     ros::Time time = ros::Time::now();
-    std::string frame = "/drone_f_cam"; 
+    //std::string frame = "/drone_f_cam"; 
     //std::string frame = "/drone_b_cam"; 
-    //std::string frame = "/camera_rgb_optical_frame"; 
+    std::string frame = "/camera_rgb_optical_frame"; 
     try{
       listenerTF.waitForTransform("/map", frame, time, ros::Duration(3.0)); 
       listenerTF.lookupTransform("/map", frame, time, transform); 
@@ -312,7 +312,7 @@ int main(int argc, char* argv[]) {
 
   demo.setup();
   cout << "Initial setup executed"<<endl;
-  image_transport::Subscriber sub = it.subscribe("/ardrone/image_raw", 1, imageCallback);
+  image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_raw", 1, imageCallback);
   object_location_pub = nh.advertise<wasp_custom_msgs::object_loc>("object_location", 1);
   cout << "Image Subscriber executed"<<endl;
   ros::spin();
