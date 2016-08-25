@@ -1,8 +1,0 @@
-prefix=/home/wasp/catkin_ws/devel
-
-Name: ardrone_tutorials
-Description: Description of ardrone_tutorials
-Version: 1.0.0
-Cflags: 
-Libs: -L/home/wasp/catkin_ws/devel/lib 
-Requires: 
