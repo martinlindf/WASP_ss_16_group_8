@@ -52,6 +52,10 @@ add_executable(april_tags src/april_tag_detection.cpp)
 target_link_libraries(april_tags ${catkin_LIBRARIES})
 add_dependencies(april_tags april_tags)
 
+add_executable(april_tags_tb src/april_tag_detection_turtlebot.cpp)
+target_link_libraries(april_tags_tb ${catkin_LIBRARIES})
+add_dependencies(april_tags_tb april_tags_tb)
+
 #############
 ## Install ##
 #############
