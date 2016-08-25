@@ -98,24 +98,26 @@ def completed_cb(data):
         completed_goals.append(goals[element_num])
         #Remove the point from goals list.
         goals.pop(element_num)
-        #Clear the map
         clear_map()
+        update_markers(goals, completed_goals)
     else:
         # If this is printed than there is a problem in tb_path_publisher;
         # it is publishing element index out of range..
-        #print("OUT OF RANGE")
+        print("OUT OF RANGE")
 
 # This Callback function will called everytime a point is placed on RViz
+
 def click_cb(data):
-    global goals
+    global goals, complete_goals
     #Gather the x,y from the point published from RViz
     x = data.point.x
     y = data.point.y
     z = 0
     #Update the list of goals by appending the Currently received point.
     goals.append([x,y])
-    #Clear the map
     clear_map()
+    update_pose_list(goals)
+    update_markers(goals, completed_goals)
 
 def start():
     global goal_pub, poseArray_pub

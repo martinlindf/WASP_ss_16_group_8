@@ -61,10 +61,16 @@ def new_goal_list_callback(data):
 def goal_status_callback(data):
 	global goal_flag
 	if len(data.status_list)!=0:
+		if (data.status_list[0].status == 1):
+			goal_flag = True
+		else:
+			goal_flag = False    
 		if((data.status_list[0].status == 4 ) or (data.status_list[0].status == 3)):
 			#current accomplished goal
-			global goal_index
-			pub1.publish(goal_index)
+			#if the goal completed or failed
+			if (goal_flag == True):
+				global goal_index
+				pub1.publish(goal_index)			
 
 
 # Intializes everything
