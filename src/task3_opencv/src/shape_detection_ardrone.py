@@ -140,9 +140,9 @@ class object_detection:
 				#obj_info_pub.point.y = trans_pt.point.y
 				#obj_info_pub.point.z = trans_pt.point.z
 				
-				obj_info_pub.point.x = 1
-				obj_info_pub.point.y = 2
-				obj_info_pub.point.z = 3
+				obj_info_pub.point.x = obj_cam_x
+				obj_info_pub.point.y = obj_cam_y
+				obj_info_pub.point.z = Distance
 				#publish the message
 				self.object_location_pub.publish(obj_info_pub)
 
@@ -163,22 +163,22 @@ class object_detection:
 		#Red_Thresholds
 		lower_red1 = np.array([0, 82, 82])
 		upper_red1 = np.array([24, 255,255])
-		lower_red2 = np.array([160,100,100])
-		upper_red2 = np.array([179,255,255])
+		lower_red2 = np.array([162,132,147])
+		upper_red2 = np.array([188,255,255])
 		#Blue Thresholds
-		lower_blue = np.array([91,42,56])
-		upper_blue = np.array([120,222,175])
+		lower_blue = np.array([100,84,66])
+		upper_blue = np.array([112,255,255])
 		#Green Thresholds
-		lower_green = np.array([60,60,46])
-		upper_green = np.array([97,255,255])
+		lower_green = np.array([53,42,83])
+		upper_green = np.array([88,255,255])
 
 		# Threshold the HSV image to get only single color portions
-		mask1a = cv2.inRange(hsv, lower_red1, upper_red1)
+		# mask1a = cv2.inRange(hsv, lower_red1, upper_red1) # TA BORT
 		mask1b = cv2.inRange(hsv, lower_red2, upper_red2)
 		mask2 = cv2.inRange(hsv, lower_green, upper_green)
 		mask3 = cv2.inRange(hsv, lower_blue, upper_blue)
 		
-		masks = [mask1a, mask1b, mask2, mask3]
+		masks = [mask1b, mask2, mask3]
 		color_id = [110, 110, 120, 130]
 		
 		#cv2.imshow("Green Mask",mask2)
