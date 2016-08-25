@@ -29,8 +29,6 @@ focal_leng = 570.34222
 
 #This may change during the competetion, need to be calibrated
 square_side_lenth = 0.115 #in mts
-triangle_side_length = 0.112 #in mts
-star_side_length = 0.049
 
 #This function finds the lengths of all the sides and estimates the longest.
 def Longest_Length(approxcontour):
@@ -62,12 +60,45 @@ class object_detection:
 		#Obejct to transform listener which will be used to transform the points from one coordinate system to other.
 		self.tl = tf.TransformListener()
 
-	def _get_shapes(self, cv_image, contours, msg_id):
-		
-		contour_color = {110: (0,0,255), 120: (0, 255,0), 130: (255,0,0)}
-		
+	#Callback function for subscribed image
+	def callback(self,data):
+		#The below two functions conver the compressed image to opencv Image
+		#'''
+		np_arr = np.fromstring(data.data, np.uint8)
+		cv_image = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR)
+		#'''
+		#cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+		#Create copy of captured image
+		img_cpy = cv_image.copy()
+		#Color to HSV and Gray Scale conversion
+		hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
+		#gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
+
+		#Red_Thresholds
+		lower_red1 = np.array([0, 100, 100])
+		upper_red1 = np.array([10, 255,255])
+		lower_red2 = np.array([160,100,100])
+		upper_red2 = np.array([179,255,255])
+		#Blue Thresholds
+		lower_blue = np.array([104,110,110])
+		upper_blue = np.array([143,255,255])
+		#Green Thresholds
+		lower_green = np.array([60,60,46])
+		upper_green = np.array([97,255,255])
+
+		# Threshold the HSV image to get only single color portions
+		mask2 = cv2.inRange(hsv, lower_green, upper_green)
+
+		#Find contours(borders) for the shapes in the image
+		#NOTE if you get following error:
+		# contours, hierarchy = cv2.findContours(mask2,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+		# ValueError: need more than two values to unpack
+		# change following line to:
+		# contours, hierarchy = cv2.findContours(mask2,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+		contours, hierarchy = cv2.findContours(mask2,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+		#Pass through each contour and check if it has required properties to classify into required object
 		for x in range (len(contours)):
-			tmp_msg_id = msg_id
 			contourarea = cv2.contourArea(contours[x]) #get area of contour
 			if contourarea > 600: #Discard contours with a small area as this may just be noise
 				#The below 2 functions help you to approximate the contour to a nearest polygon
@@ -79,37 +110,16 @@ class object_detection:
 				obj_y = int(rect_cordi[0][1])
 
 				#Check for Square
-				if len(approxcontour) == 8: # Star
-					cv2.drawContours(cv_image,[approxcontour],0,contour_color[msg_id],2)
-					approxcontour = approxcontour.reshape((len(approxcontour),2))
-					LongestSide = Longest_Length(approxcontour)
-					Distance = (focal_leng*star_side_length)/LongestSide
-					tmp_msg_id = tmp_msg_id + 1
-					
-				elif len(approxcontour) == 4: # Square
-					cv2.drawContours(cv_image,[approxcontour],0,contour_color[msg_id],2)
-					approxcontour = approxcontour.reshape((len(approxcontour),2))
+				if len(approxcontour) == 4:
+					#print ('Length ', len(approxcontour))
+					cv2.drawContours(cv_image,[approxcontour],0,(0,255,255),2)
+					approxcontour = approxcontour.reshape((4,2))
 					LongestSide = Longest_Length(approxcontour)
 					Distance = (focal_leng*square_side_lenth)/LongestSide #focal length x Actual Border width / size of Border in pixels
-					tmp_msg_id = tmp_msg_id + 2
-				
-				elif len(approxcontour) == 3: # Triangle
-					cv2.drawContours(cv_image,[approxcontour],0,contour_color[msg_id],2)
-					approxcontour = approxcontour.reshape((len(approxcontour),2))
-					LongestSide = Longest_Length(approxcontour)
-					Distance = (focal_leng*triangle_side_length)/LongestSide
-					tmp_msg_id = tmp_msg_id + 3
-				else:
-					continue
 
-				'''
-				elif len(approxcontour) >= 10 and len(approxcontour) <= 11: # Circle-Star
-					cv2.drawContours(cv_image,[approxcontour],0,contour_color[msg_id],2)
-					approxcontour = approxcontour.reshape((len(approxcontour),2))
-					LongestSide = Longest_Length(approxcontour)
-					Distance = (focal_leng*square_side_lenth)/LongestSide
-					tmp_msg_id = tmp_msg_id + 4
-				'''
+				#Move to next Contour
+				else :
+					continue
 
 				#Calculate Cordinates wrt to Camera, convert to Map
 				#Coordinates and publish message for storing
@@ -127,72 +137,18 @@ class object_detection:
 				P.point.z = Distance
 
 				#Transform Point into map coordinates
-				#trans_pt = self.tl.transformPoint('/map', P)
+				trans_pt = self.tl.transformPoint('/map', P)
 
 				#fill in the publisher object to publish
 				obj_info_pub = object_loc()
-				obj_info_pub.ID = tmp_msg_id #ID need to be changed
-				
-				#print("obj_info_pub.ID = " + str(tmp_msg_id))
-				
-				
-				#obj_info_pub.point.x = trans_pt.point.x
-				#obj_info_pub.point.y = trans_pt.point.y
-				#obj_info_pub.point.z = trans_pt.point.z
-				
-				obj_info_pub.point.x = 1
-				obj_info_pub.point.y = 2
-				obj_info_pub.point.z = 3
+				obj_info_pub.ID = 27 #ID need to be changed
+				obj_info_pub.point.x = trans_pt.point.x
+				obj_info_pub.point.y = trans_pt.point.y
+				obj_info_pub.point.z = trans_pt.point.z
+
 				#publish the message
 				self.object_location_pub.publish(obj_info_pub)
 
-	#Callback function for subscribed image
-	def callback(self,data):
-		#The below two functions conver the compressed image to opencv Image
-		#'''
-		np_arr = np.fromstring(data.data, np.uint8)
-		cv_image = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR) # TURTLE COMPRESSED
-		#'''
-		#cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8") # DRONE RAW
-		#Create copy of captured image
-		img_cpy = cv_image.copy()
-		#Color to HSV and Gray Scale conversion
-		hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
-		gray = cv2.cvtColor(cv_image, cv2.COLOR_BGR2GRAY)
-
-		#Red_Thresholds
-		lower_red1 = np.array([0, 82, 82])
-		upper_red1 = np.array([24, 255,255])
-		lower_red2 = np.array([160,100,100])
-		upper_red2 = np.array([179,255,255])
-		#Blue Thresholds
-		lower_blue = np.array([91,42,56])
-		upper_blue = np.array([120,222,175])
-		#Green Thresholds
-		lower_green = np.array([60,60,46])
-		upper_green = np.array([97,255,255])
-
-		# Threshold the HSV image to get only single color portions
-		mask1a = cv2.inRange(hsv, lower_red1, upper_red1)
-		mask1b = cv2.inRange(hsv, lower_red2, upper_red2)
-		mask2 = cv2.inRange(hsv, lower_green, upper_green)
-		mask3 = cv2.inRange(hsv, lower_blue, upper_blue)
-		
-		masks = [mask1a, mask1b, mask2, mask3]
-		color_id = [110, 110, 120, 130]
-		
-		#cv2.imshow("Green Mask",mask2)
-		#cv2.imshow("Blue Mask",mask3)
-		#cv2.imshow("Red Mask 1",mask1a)
-		#cv2.imshow("Red Mask 2",mask1b)
-				
-		i = 0
-		for mask in masks:
-			#Find contours(borders) for the shapes in the image
-			contours, hierarchy = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-			#Pass through each contour and check if it has required properties to classify into required object
-			self._get_shapes(cv_image, contours, color_id[i])
-			i = i + 1
 
 		#Display the captured image
 		cv2.imshow("Image",cv_image)

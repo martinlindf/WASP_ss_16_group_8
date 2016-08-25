@@ -55,8 +55,8 @@ class object_detection:
 		self.object_location_pub = rospy.Publisher("/object_location", object_loc, queue_size =1)
 		#original images is huge and creates lot of latency, therefore subscribe to compressed image
 
-		self.image_sub = rospy.Subscriber("/camera/rgb/image_raw/compressed",CompressedImage, self.callback)
-		#self.image_sub = rospy.Subscriber("/ardrone/image_raw",Image,self.callback)
+		#self.image_sub = rospy.Subscriber("/camera/rgb/image_raw/compressed", CompressedImage, self.callback)
+		self.image_sub = rospy.Subscriber("/ardrone/image_raw", Image, self.callback)
 		#Cv Bridge is used to convert images from ROS messages to numpy array for openCV and vice versa
 		self.bridge = CvBridge()
 		#Obejct to transform listener which will be used to transform the points from one coordinate system to other.
@@ -150,10 +150,10 @@ class object_detection:
 	def callback(self,data):
 		#The below two functions conver the compressed image to opencv Image
 		#'''
-		np_arr = np.fromstring(data.data, np.uint8)
-		cv_image = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR) # TURTLE COMPRESSED
+		#np_arr = np.fromstring(data.data, np.uint8)
+		#cv_image = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR) # TURTLE COMPRESSED
 		#'''
-		#cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8") # DRONE RAW
+		cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8") # DRONE RAW
 		#Create copy of captured image
 		img_cpy = cv_image.copy()
 		#Color to HSV and Gray Scale conversion
