@@ -201,7 +201,7 @@ public:
     double yaw, pitch, roll;
     wRo_to_euler(fixed_rot, yaw, pitch, roll);
 
-
+    /*
     //Convert from local to global coordinates.
     tf::TransformListener listenerTF;
     tf::StampedTransform transform;
@@ -220,7 +220,7 @@ public:
     }
     tf::Vector3 modpoint;
     modpoint = transform * point; 
-
+*/
 
 
 
