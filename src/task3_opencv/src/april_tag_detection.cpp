@@ -24,6 +24,8 @@ using namespace std;
 #include <list>
 #include <sys/time.h>
 #include "wasp_custom_msgs/object_loc.h"
+#include <tf/transform_listener.h>
+#include <tf/transform_datatypes.h>
 
 // OpenCV library for easy access to USB camera and drawing of images
 // on screen
@@ -194,9 +196,35 @@ public:
       1, 0,  0,
       0,  -1,  0,
       0,  0,  1;
+
     Eigen::Matrix3d fixed_rot = F*rotation;
     double yaw, pitch, roll;
     wRo_to_euler(fixed_rot, yaw, pitch, roll);
+
+
+    //Convert from local to global coordinates.
+    tf::TransformListener listenerTF;
+    tf::StampedTransform transform;
+    
+    tf::Vector3 point(translation(1), translation(2), translation(3)); 
+
+    ros::Time time = ros::Time::now();
+    std::string frame = "/turtlebot"; 
+    try{
+      listenerTF.waitForTransform("/map", frame, time, ros::Duration(3.0)); 
+      listenerTF.lookupTransform("/map", frame, time, transform); 
+    }
+    catch(tf::TransformException ex) 
+    {
+      ROS_WARN("Turtlebot to camera transform unavailable %s", ex.what()); 
+    }
+    tf::Vector3 modpoint;
+    modpoint = transform * point; 
+
+
+
+
+
     //Message to publish the APril tag ID's collected
     wasp_custom_msgs::object_loc location;
     location.ID = detection.id;
