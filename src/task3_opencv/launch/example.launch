@@ -21,11 +21,6 @@
     </rosparam>
   </node>
 
-<!--Pos: x y z yaw pitch roll -->
-  <node pkg="tf" type="static_transform_publisher" name="drone_f_cam_2_drone" args="0.22 0 0 0 0 0   /drone /drone_f_cam 100" />
 
-  <node pkg="tf" type="static_transform_publisher" name="drone_b_cam_2_drone" args="0 0 -0.03 0 -1.57 0 /drone /drone_b_cam 100" />
-
-  <node pkg="tf" type="static_transform_publisher" name="drone_2_turtlebot"   args="0.05 0 1.5 0 0 0    /camera_rgb_optical_frame /drone 100" />
 
 </launch>
