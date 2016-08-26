@@ -127,7 +127,12 @@ class object_detection:
 				P.point.z = Distance
 
 				#Transform Point into map coordinates
-				#trans_pt = self.tl.transformPoint('/map', P)
+				
+				# trans_pt = self.tl.lookupTransform('/map', '/camera_rgb_optical_frame', rospy.Time(0.2))
+				try:
+					trans_pt = self.tl.transformPoint('/map', P)
+				except:
+					continue
 
 				#fill in the publisher object to publish
 				obj_info_pub = object_loc()
@@ -136,13 +141,14 @@ class object_detection:
 				#print("obj_info_pub.ID = " + str(tmp_msg_id))
 				
 				
-				#obj_info_pub.point.x = trans_pt.point.x
-				#obj_info_pub.point.y = trans_pt.point.y
-				#obj_info_pub.point.z = trans_pt.point.z
-				
+				obj_info_pub.point.x = trans_pt.point.x
+				obj_info_pub.point.y = trans_pt.point.y
+				obj_info_pub.point.z = trans_pt.point.z
+				'''
 				obj_info_pub.point.x = 1
 				obj_info_pub.point.y = 2
 				obj_info_pub.point.z = 3
+				'''
 				#publish the message
 				self.object_location_pub.publish(obj_info_pub)
 
@@ -163,23 +169,23 @@ class object_detection:
 		#Red_Thresholds
 		lower_red1 = np.array([0, 82, 82])
 		upper_red1 = np.array([24, 255,255])
-		lower_red2 = np.array([160,100,100])
-		upper_red2 = np.array([179,255,255])
+		lower_red2 = np.array([162,132,147])
+		upper_red2 = np.array([188,255,255])
 		#Blue Thresholds
-		lower_blue = np.array([91,42,56])
-		upper_blue = np.array([120,222,175])
+		lower_blue = np.array([100,84,66])
+		upper_blue = np.array([112,255,255])
 		#Green Thresholds
-		lower_green = np.array([60,60,46])
-		upper_green = np.array([97,255,255])
+		lower_green = np.array([53,42,83])
+		upper_green = np.array([88,255,255])
 
 		# Threshold the HSV image to get only single color portions
-		mask1a = cv2.inRange(hsv, lower_red1, upper_red1)
+		# mask1a = cv2.inRange(hsv, lower_red1, upper_red1) # TA BORT
 		mask1b = cv2.inRange(hsv, lower_red2, upper_red2)
 		mask2 = cv2.inRange(hsv, lower_green, upper_green)
 		mask3 = cv2.inRange(hsv, lower_blue, upper_blue)
 		
-		masks = [mask1a, mask1b, mask2, mask3]
-		color_id = [110, 110, 120, 130]
+		masks = [mask1b, mask2, mask3]
+		color_id = [110, 120, 130]
 		
 		#cv2.imshow("Green Mask",mask2)
 		#cv2.imshow("Blue Mask",mask3)
