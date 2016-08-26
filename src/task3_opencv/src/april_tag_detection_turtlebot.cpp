@@ -204,15 +204,18 @@ public:
 
     //Message to publish the APril tag ID's collected
     wasp_custom_msgs::object_loc location;
-     location.point.x = translation(0);
-    location.point.y = translation(1);
-    location.point.z = translation(2);
+    location.ID = ((int) detection.id); 
+    location.point.x = -((double) translation(1));
+    location.point.y = ((double) translation(2));
+    location.point.z = ((double) translation(0));
     object_location_pub.publish(location);
 
+    cout << location << endl; 
+
     cout << " distance=" << translation.norm()
-         << "m, x=" <<  translation(0)
-         << ", y=" <<  translation(1)
-         << ", z=" <<  translation(2)
+         << "m, x=" <<  -translation(1)
+         << ", y=" <<  translation(2)
+         << ", z=" <<  translation(0)
          << ", yaw=" << yaw
          << ", pitch=" << pitch
          << ", roll=" << roll
@@ -286,8 +289,8 @@ int main(int argc, char* argv[]) {
 
   demo.setup();
   cout << "Initial setup executed"<<endl;
-  image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_rawe", 1, imageCallback);
-  object_location_pub = nh.advertise<wasp_custom_msgs::object_loc>("object_location", 1);  
+  image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_rawe", 1000, imageCallback);
+  object_location_pub = nh.advertise<wasp_custom_msgs::object_loc>("object_location", 1000);  
   cout << "Image Subscriber executed"<<endl;
   ros::spin();
 
