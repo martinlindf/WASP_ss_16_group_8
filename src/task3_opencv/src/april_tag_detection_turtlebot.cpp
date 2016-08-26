@@ -201,44 +201,18 @@ public:
     double yaw, pitch, roll;
     wRo_to_euler(fixed_rot, yaw, pitch, roll);
 
-    
-    //Convert from local to global coordinates.
-    tf::TransformListener listenerTF;
-    tf::StampedTransform transform;
-    
-    tf::Vector3 point(translation(0), translation(1), translation(2)); 
-
-    ros::Time time = ros::Time::now();
-    //std::string frame = "/drone_f_cam"; 
-    //std::string frame = "/drone_b_cam"; 
-    std::string frame = "/camera_rgb_optical_frame"; 
-    try{
-      listenerTF.waitForTransform("/map", frame, time, ros::Duration(3.0)); 
-      listenerTF.lookupTransform("/map", frame, time, transform); 
-    }
-    catch(tf::TransformException ex) 
-    {
-      ROS_WARN("Turtlebot to camera transform unavailable %s", ex.what()); 
-    }
-    tf::Vector3 modpoint;
-    modpoint = transform * point; 
-
-
-
-
 
     //Message to publish the APril tag ID's collected
     wasp_custom_msgs::object_loc location;
-    location.ID = detection.id;
-    location.point.x = modpoint.getX();
-    location.point.y = modpoint.getY();
-    location.point.z = modpoint.getZ();
+     location.point.x = translation(0);
+    location.point.y = translation(1);
+    location.point.z = translation(2);
     object_location_pub.publish(location);
 
     cout << " distance=" << translation.norm()
-         << "m, x=" <<  modpoint.getX()
-         << ", y=" <<  modpoint.getY()
-         << ", z=" <<  modpoint.getZ()
+         << "m, x=" <<  translation(0)
+         << ", y=" <<  translation(1)
+         << ", z=" <<  translation(2)
          << ", yaw=" << yaw
          << ", pitch=" << pitch
          << ", roll=" << roll
@@ -313,7 +287,7 @@ int main(int argc, char* argv[]) {
   demo.setup();
   cout << "Initial setup executed"<<endl;
   image_transport::Subscriber sub = it.subscribe("/camera/rgb/image_rawe", 1, imageCallback);
-  object_location_pub = nh.advertise<wasp_custom_msgs::object_loc>("object_location", 1);
+  object_location_pub = nh.advertise<wasp_custom_msgs::object_loc>("object_location", 1);  
   cout << "Image Subscriber executed"<<endl;
   ros::spin();
 
